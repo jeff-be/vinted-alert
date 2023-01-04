@@ -1,0 +1,10 @@
+<%- include ('./shared/header.ejs', {title: 'Alert Vinted'}) %>
+
+<h1 class="mb-5">Alert Vinted</h1>
+<h3>Dernier article</h3>
+<a id="app" href="<%= post.url %>" target="_blank"><%= post.title %></a>
+<h3 class="mt-5">Historique</h3>
+<ul class="history"></ul>
+<audio id="audio" src="/notification.mp3" preload="auto"></audio>
+
+<%- include ('./shared/footer.ejs') %>
