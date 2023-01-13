@@ -22,7 +22,7 @@ app.register(fastfyStatic, {
 app.register(fastifyFavicon, { path: './public/favicon', name: 'favicon.ico', maxAge: 3600 })
 
 app.get('/', init)
-app.get('/item', getPost)
+app.post('/item', getPost)
 
 app.setErrorHandler((error, req, res) => {
     if (error instanceof PostNotFound) {

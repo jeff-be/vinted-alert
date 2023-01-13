@@ -1,45 +1,95 @@
 /**
  * Genere list of posts history
- * @param {HTMLElement} tag 
- * @param {{url: string, title: string}} post 
+ * @param {{url: string, title: string}} post
  */
-function genereHistory (tag, post) {
+function genereHistory({ url, title }) {
+    const tag = document.querySelector('.history')
     const li = document.createElement('li')
     const item = document.createElement('a')
-    item.setAttribute('href', post.url)
+    item.setAttribute('href', url)
     item.setAttribute('target', '_blank')
-    item.textContent = post.title
+    item.textContent = title
     li.appendChild(item)
     tag.insertBefore(li, tag.firstChild)
 }
 
 /**
- * @param {HTMLElement} tag 
- * @param {{url: string, title: string}} post 
+ * Search and genere current post link
+ * @param {String} search
+ * @return {HTMLElement}
  */
-function updateCurrentPost (tag, post) {
+async function generateCurrentPost(search) {
+    const app = document.getElementById('app')
+    const tag = document.createElement('a')
+    const post = await fetchSearch(search)
+    tag.href = post.url
+    tag.textContent = post.title
+    tag.target = '_blank'
+    app.appendChild(tag)
+    return tag
+}
+
+/**
+ * @param {String} search 
+ */
+function generateCurrentSearch(search) {
+    const searchTag = document.getElementById('search')
+    searchTag.textContent = `Recherche en cours : "${search}"`
+}
+
+/**
+ * @param {HTMLElement} tag
+ * @param {{url: string, title: string}} post
+ */
+function updateCurrentPost(tag, post) {
     tag.setAttribute('href', post.url)
     tag.textContent = post.title
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const app = document.getElementById('app')
+/**
+ * Search
+ * @param {String} search 
+ * @returns {Object}
+ */
+async function fetchSearch(search) {
+    const res = await fetch('/item', {
+        method: 'POST',
+        body: search,
+    })
+    const post = await res.json()
+    return post
+}
+
+function alert() {
     const audio = document.getElementById('audio')
-    const historyList = document.querySelector('.history')
-    const currentValue = app.href
+    audio.play()
+}
+
+function wait(duration) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(duration), duration)
+    })
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    let search
+    do {
+        search = prompt('Sur quelle recherche activer les alertes Vinted ?')
+    } while (!search)
+    generateCurrentSearch(search)
+    const app = await generateCurrentPost(search)
     let history = []
     setInterval(async () => {
-        const res = await fetch('/item')
-        const post = await res.json()
-        if (history.indexOf(post.url) === -1 && post.url !== currentValue) {
-            history.push(post.url)
-            genereHistory(historyList, {
+        const post = await fetchSearch(search)
+        if (history.indexOf(post.url) === -1 && post.url !== app.href) {
+            history.push(app.href)
+            genereHistory({
                 url: app.href,
-                title: app.textContent
+                title: app.textContent,
             })
             updateCurrentPost(app, post)
-            audio.play()
-            window.open(post.url, '_blank').focus();
+            alert()
+            window.open(post.url, '_blank').focus()
         }
-    }, 10000)
+    }, 11000)
 })
