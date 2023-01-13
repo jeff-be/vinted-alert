@@ -1,10 +1,17 @@
 <%- include ('./shared/header.ejs', {title: 'Alert Vinted'}) %>
 
-<h1 class="mb-5">Alert Vinted</h1>
-<h3>Dernier article</h3>
-<a id="app" href="<%= post.url %>" target="_blank"><%= post.title %></a>
-<h3 class="mt-5">Historique</h3>
-<ul class="history"></ul>
+<h4 id="search" class="mb-4 p-3 rounded box-shadow" style="background-color: #40fe88;"></h4>
+
+<div class="current p-3 mb-3 rounded bg-white box-shadow">
+    <h5>Dernier article</h5>
+    <div id="app"></div>
+</div>
+
+<div class="history_container p-3 rounded bg-white box-shadow">
+    <h5>Historique</h5>
+    <ul class="history"></ul>
+</div>
+
 <audio id="audio" src="/notification.mp3" preload="auto"></audio>
 
 <%- include ('./shared/footer.ejs') %>
