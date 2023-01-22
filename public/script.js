@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     let history = []
     setInterval(async () => {
         const post = await fetchSearch(search)
-        if (post && history.indexOf(post.url) === -1 && post.url !== app.href) {
+        if (post.url && history.indexOf(post.url) === -1 && post.url !== app.href) {
             history.push(app.href)
             genereHistory({
                 url: app.href,
