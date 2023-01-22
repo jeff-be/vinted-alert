@@ -15,12 +15,10 @@ const getPost = async (req, res) => {
 }
 
 const init = async (req, res) => {
-    const post = await getPost()
-    return res.view('./templates/index.ejs', {
-        post
-    })
+    return res.view('./templates/index.ejs', { post: null })
 }
 
 module.exports = {
-    getPost, init
+    getPost,
+    init,
 }
