@@ -22,18 +22,35 @@ function updateCurrentPost (tag, post) {
     tag.textContent = post.title
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const app = document.getElementById('app')
+/**
+ * Search
+ * @param {String} search 
+ * @returns {Object}
+ */
+async function fetchSearch(search) {
+    try {
+        const res = await fetch('/item', {
+            method: 'POST',
+            body: search,
+        })
+        const post = await res.json()
+        return post
+    } catch (e) {
+        console.log(e)
+        throw new Error('Erreur dans l\'obtention du dernier article.')
+    }
+}
+
+function alert() {
     const audio = document.getElementById('audio')
     const historyList = document.querySelector('.history')
     const currentValue = app.href
     let history = []
     setInterval(async () => {
-        const res = await fetch('/item')
-        const post = await res.json()
-        if (history.indexOf(post.url) === -1 && post.url !== currentValue) {
-            history.push(post.url)
-            genereHistory(historyList, {
+        const post = await fetchSearch(search)
+        if (post && history.indexOf(post.url) === -1 && post.url !== app.href) {
+            history.push(app.href)
+            genereHistory({
                 url: app.href,
                 title: app.textContent
             })
