@@ -96,5 +96,5 @@ document.addEventListener('DOMContentLoaded', async function () {
             alert()
             window.open(post.url, '_blank').focus()
         }
-    }, 11000)
+    }, 12000)
 })
