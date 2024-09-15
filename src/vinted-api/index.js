@@ -20,9 +20,17 @@ const fetchCookie = (domain = 'fr') => {
             }
         }).then((res) => {
             const sessionCookie = res.headers.get('set-cookie');
+            const cookiesArray = sessionCookie.split(', ');
             controller.abort();
-            const samesite = cookie.parse(sessionCookie)['SameSite']
-            const c = samesite.slice(samesite.indexOf('=') + 1);
+
+            c = null;
+            cookiesArray.forEach((cookieString) => {
+                const parsedCookie = cookie.parse(cookieString);
+                if (parsedCookie['_vinted_fr_session']) {
+                    c = parsedCookie['_vinted_fr_session'];
+                }
+            });
+            
             if (c) {
                 cookies.set(domain, c);
             }
