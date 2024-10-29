@@ -79,7 +79,7 @@ function wait(duration) {
 document.addEventListener('DOMContentLoaded', async function () {
     let search
     do {
-        search = prompt('Sur quelle recherche activer les alertes Vinted ?')
+        search = prompt('Sur quelle recherche activer les alertes ?')
     } while (!search)
     generateCurrentSearch(search)
     const app = await generateCurrentPost(search)
