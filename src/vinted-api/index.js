@@ -24,15 +24,22 @@ const fetchCookie = (domain = 'fr') => {
             controller.abort();
 
             c = null;
+            d = null;
             cookiesArray.forEach((cookieString) => {
                 const parsedCookie = cookie.parse(cookieString);
                 if (parsedCookie['_vinted_fr_session']) {
                     c = parsedCookie['_vinted_fr_session'];
                 }
+                if (parsedCookie['access_token_web']) {
+                    d = parsedCookie['access_token_web']
+                }
             });
             
             if (c) {
                 cookies.set(domain, c);
+            }
+            if (d) {
+                cookies.set('access', d)
             }
             resolve();
         }).catch((e) => {
@@ -108,17 +115,20 @@ const search = (url, disableOrder = false, allowSwap = false, customParams = {})
         }
 
         let c = cookies.get(domain) ?? process.env[`VINTED_API_${domain.toUpperCase()}_COOKIE`];
-        if (!c) {
+        let d = cookies.get('access') ?? null
+        if (!c || !d) {
             await fetchCookie(domain).catch(() => {});
             c = cookies.get(domain) ?? process.env[`VINTED_API_${domain.toUpperCase()}_COOKIE`];
+            d = cookies.get('access')
         }
 
         const controller = new AbortController();
         fetch(`https://www.vinted.fr/api/v2/catalog/items?${querystring}`, {
+            method: 'GET',
             signal: controller.signal,
             //agent: process.env.VINTED_API_HTTPS_PROXY ? new HttpsProxyAgent(process.env.VINTED_API_HTTPS_PROXY) : undefined,
             headers: {
-                cookie: '_vinted_fr_session=' + c,
+                cookie: '_vinted_fr_session=' + c + ',access_token_web=' + d,
                 'user-agent': new UserAgent().toString(),
                 accept: 'application/json, text/plain, */*'
             }
