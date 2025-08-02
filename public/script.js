@@ -55,7 +55,10 @@ async function fetchSearch(search) {
     try {
         const res = await fetch('/item', {
             method: 'POST',
-            body: search,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: search })
         })
         const post = await res.json()
         return post
